@@ -1628,3 +1628,37 @@ color:white;
 cursor:pointer;
 
 }
+
+/* ===========================
+   CARRUSEL
+=========================== */
+
+.gallery{
+
+display:flex;
+gap:25px;
+
+overflow-x:auto;
+scroll-behavior:smooth;
+
+scrollbar-width:none;
+
+}
+
+.gallery::-webkit-scrollbar{
+display:none;
+}
+
+.gallery-item{
+
+flex:0 0 340px;
+
+user-select:none;
+
+}
+
+.gallery img{
+
+pointer-events:auto;
+
+}

@@ -201,7 +201,7 @@ setTimeout(()=>{
 
 
 /* ===========================
-   CARRUSEL PORTFOLIO
+   CARRUSEL INFINITO
 =========================== */
 
 const gallery=document.querySelector(".gallery");
@@ -210,23 +210,111 @@ const prev=document.querySelector(".prev");
 
 if(gallery){
 
-    next.addEventListener("click",()=>{
+const cards=[...gallery.children];
 
-        gallery.scrollBy({
-            left:380,
-            behavior:"smooth"
-        });
+const visibles=3;
 
-    });
+// Clonar primeras
+cards.slice(0,visibles).forEach(card=>{
+gallery.appendChild(card.cloneNode(true));
+});
 
-    prev.addEventListener("click",()=>{
+// Clonar últimas
+cards.slice(-visibles).reverse().forEach(card=>{
+gallery.insertBefore(card.cloneNode(true),gallery.firstChild);
+});
 
-        gallery.scrollBy({
-            left:-380,
-            behavior:"smooth"
-        });
+const ancho=cards[0].offsetWidth+25;
 
-    });
+gallery.scrollLeft=ancho*visibles;
+
+// Flecha derecha
+
+next.addEventListener("click",()=>{
+
+gallery.scrollBy({
+left:ancho,
+behavior:"smooth"
+});
+
+});
+
+// Flecha izquierda
+
+prev.addEventListener("click",()=>{
+
+gallery.scrollBy({
+left:-ancho,
+behavior:"smooth"
+});
+
+});
+
+// Reacomodar automáticamente
+
+gallery.addEventListener("scroll",()=>{
+
+const max=gallery.scrollWidth-gallery.clientWidth;
+
+if(gallery.scrollLeft<=0){
+
+gallery.scrollLeft=max-(ancho*visibles*2);
+
+}
+
+if(gallery.scrollLeft>=max){
+
+gallery.scrollLeft=ancho*visibles;
+
+}
+
+});
+
+// Scroll con rueda
+
+gallery.addEventListener("wheel",(e)=>{
+
+e.preventDefault();
+
+gallery.scrollBy({
+
+left:e.deltaY,
+
+behavior:"smooth"
+
+});
+
+});
+
+// Swipe celular
+
+let inicioX=0;
+
+gallery.addEventListener("touchstart",(e)=>{
+
+inicioX=e.touches[0].clientX;
+
+});
+
+gallery.addEventListener("touchend",(e)=>{
+
+let fin=e.changedTouches[0].clientX;
+
+let diferencia=inicioX-fin;
+
+if(Math.abs(diferencia)>40){
+
+gallery.scrollBy({
+
+left:diferencia,
+
+behavior:"smooth"
+
+});
+
+}
+
+});
 
 }
 
@@ -239,14 +327,14 @@ const lightbox=document.getElementById("lightbox");
 const imagenGrande=document.getElementById("imagenAmpliada");
 const cerrar=document.getElementById("cerrar");
 
-document.querySelectorAll(".gallery-item img").forEach(img=>{
+gallery.addEventListener("click",(e)=>{
 
-    img.addEventListener("click",()=>{
+if(e.target.tagName==="IMG"){
 
-        lightbox.style.display="flex";
-        imagenGrande.src=img.src;
+lightbox.style.display="flex";
+imagenGrande.src=e.target.src;
 
-    });
+}
 
 });
 
