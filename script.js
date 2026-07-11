@@ -220,11 +220,13 @@ gallery.appendChild(card.cloneNode(true));
 });
 
 // Clonar últimas
-cards.slice(-visibles).reverse().forEach(card=>{
-gallery.insertBefore(card.cloneNode(true),gallery.firstChild);
+cards.slice(-visibles).forEach(card=>{
+    gallery.insertBefore(card.cloneNode(true),gallery.firstChild);
 });
 
-const ancho=cards[0].offsetWidth+25;
+const ancho =
+gallery.querySelector(".gallery-item").getBoundingClientRect().width + 20;
+
 
 gallery.scrollLeft=ancho*visibles;
 
@@ -250,21 +252,29 @@ behavior:"smooth"
 
 });
 
-// Reacomodar automáticamente
-
 gallery.addEventListener("scroll",()=>{
 
 const max=gallery.scrollWidth-gallery.clientWidth;
 
-if(gallery.scrollLeft<=0){
+// Llegó al principio
+if(gallery.scrollLeft<=ancho){
 
-gallery.scrollLeft=max-(ancho*visibles*2);
+gallery.style.scrollBehavior="auto";
+
+gallery.scrollLeft=max-(ancho*(visibles+1));
+
+gallery.style.scrollBehavior="smooth";
 
 }
 
-if(gallery.scrollLeft>=max){
+// Llegó al final
+if(gallery.scrollLeft>=max-ancho){
 
-gallery.scrollLeft=ancho*visibles;
+gallery.style.scrollBehavior="auto";
+
+gallery.scrollLeft=ancho*(visibles+1);
+
+gallery.style.scrollBehavior="smooth";
 
 }
 
